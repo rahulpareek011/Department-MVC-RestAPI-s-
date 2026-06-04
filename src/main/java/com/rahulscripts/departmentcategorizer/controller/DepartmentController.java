@@ -4,9 +4,8 @@ import com.rahulscripts.departmentcategorizer.advices.ApiResponse;
 import com.rahulscripts.departmentcategorizer.dto.DepartmentDto;
 import com.rahulscripts.departmentcategorizer.service.DepartmentService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,7 +19,14 @@ public class DepartmentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DepartmentDto>> getDepartments(){
+    public ResponseEntity<List<DepartmentDto>> getAllDepartment(){
         return ResponseEntity.ok(departmentService.getAllDepartments());
     }
+
+    @PostMapping
+    public ApiResponse<ResponseEntity<?>> createNewDepartment(@RequestBody @Valid DepartmentDto departmentDto){
+        departmentService.createNewDepartment(departmentDto);
+        return ResponseEntity.ok(departmentService.getAllDepartments());
+    }
+
 }
