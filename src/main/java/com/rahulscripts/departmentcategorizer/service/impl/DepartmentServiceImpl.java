@@ -2,16 +2,20 @@ package com.rahulscripts.departmentcategorizer.service.impl;
 
 import com.rahulscripts.departmentcategorizer.advices.ApiResponse;
 import com.rahulscripts.departmentcategorizer.dto.DepartmentDto;
+import com.rahulscripts.departmentcategorizer.entity.DepartmentEntity;
 import com.rahulscripts.departmentcategorizer.repositories.DepartmentRepository;
 import com.rahulscripts.departmentcategorizer.service.DepartmentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.Banner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Service
 public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final ModelMapper modelMapper;
@@ -34,7 +38,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public ApiResponse<ResponseEntity<?>> createNewDepartment(DepartmentDto departmentDto) {
-        modelMapper.map(departmentDto)
+    public DepartmentDto createNewDepartment(DepartmentDto departmentDto) {
+        DepartmentEntity departmentEntity = modelMapper.map(departmentDto, DepartmentEntity.class);
+        DepartmentEntity savedDepartment = departmentRepository.save(departmentEntity);
+        return modelMapper.map(savedDepartment,DepartmentDto.class);
     }
 }

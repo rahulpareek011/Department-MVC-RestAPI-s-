@@ -10,5 +10,5 @@ public interface DepartmentService {
 
     List<DepartmentDto> getAllDepartments();
 
-    ApiResponse<ResponseEntity<?>> createNewDepartment(DepartmentDto departmentDto);
+    DepartmentDto createNewDepartment(DepartmentDto departmentDto);
 }
