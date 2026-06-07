@@ -25,11 +25,22 @@ public class DepartmentController {
         return ResponseEntity.ok(departmentService.getAllDepartments());
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<List<DepartmentDto>> getDepartmentById(@PathVariable Long id){
+        return ResponseEntity.ok(departmentService.getDepartmentById(id));
+    }
+
     @PostMapping
     public ResponseEntity<DepartmentDto> createNewDepartment(@RequestBody @Valid DepartmentDto departmentDto){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(departmentService.createNewDepartment(departmentDto));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<String>> deleteDepartmentById(@RequestParam Long id){
+        String resp = departmentService.deleteDepartmentById(id);
+        return new ResponseEntity<>(new ApiResponse<>(resp),HttpStatus.OK);
     }
 
 }

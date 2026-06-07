@@ -11,4 +11,8 @@ public interface DepartmentService {
     List<DepartmentDto> getAllDepartments();
 
     DepartmentDto createNewDepartment(DepartmentDto departmentDto);
+
+    String deleteDepartmentById(Long id);
+
+    DepartmentDto getDepartmentById(Long id);
 }

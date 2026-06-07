@@ -5,6 +5,7 @@ import com.rahulscripts.departmentcategorizer.dto.DepartmentDto;
 import com.rahulscripts.departmentcategorizer.entity.DepartmentEntity;
 import com.rahulscripts.departmentcategorizer.repositories.DepartmentRepository;
 import com.rahulscripts.departmentcategorizer.service.DepartmentService;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.Banner;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.ui.ModelMap;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
@@ -34,7 +36,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     public void isExistById(Long id){
-        if(departmentRepository.existsById(id)) throw new NoSuchElementException();
+        if(!departmentRepository.existsById(id)) throw new EntityNotFoundException("Department Not found with this id: "+id);
     }
 
     @Override
@@ -42,5 +44,19 @@ public class DepartmentServiceImpl implements DepartmentService {
         DepartmentEntity departmentEntity = modelMapper.map(departmentDto, DepartmentEntity.class);
         DepartmentEntity savedDepartment = departmentRepository.save(departmentEntity);
         return modelMapper.map(savedDepartment,DepartmentDto.class);
+    }
+
+    @Override
+    public String deleteDepartmentById(Long id) {
+        isExistById(id);
+        departmentRepository.deleteById(id);
+        return "Deleted Id: "+id;
+    }
+
+    @Override
+    public DepartmentDto getDepartmentById(Long id) {
+        isExistById(id);
+        Optional<DepartmentEntity> ent = departmentRepository.findById(id);
+        return modelMapper.map(ent,DepartmentDto.class);
     }
 }

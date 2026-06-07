@@ -20,12 +20,12 @@ public class ApiResponse<T> {
         this.timeStamp = LocalDateTime.now();
     }
 
-    ApiResponse(T data){
+    public ApiResponse(T data){
         this();
         this.data = data;
     }
 
-    ApiResponse(ApiError error){
+    public ApiResponse(ApiError error){
         this.error = error;
     }
 }
