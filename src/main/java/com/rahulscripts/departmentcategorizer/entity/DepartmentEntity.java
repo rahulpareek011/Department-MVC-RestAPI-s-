@@ -28,4 +28,6 @@ public class DepartmentEntity {
     private Boolean isActive;
 
     private LocalDate createdAt;
+
+    private String Role;
 }

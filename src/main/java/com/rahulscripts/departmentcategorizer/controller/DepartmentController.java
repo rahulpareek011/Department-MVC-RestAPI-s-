@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping(path = "/departments")
 @RestController
@@ -26,7 +27,7 @@ public class DepartmentController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<List<DepartmentDto>> getDepartmentById(@PathVariable Long id){
+    public ResponseEntity<DepartmentDto> getDepartmentById(@PathVariable Long id){
         return ResponseEntity.ok(departmentService.getDepartmentById(id));
     }
 
@@ -41,6 +42,18 @@ public class DepartmentController {
     public ResponseEntity<ApiResponse<String>> deleteDepartmentById(@RequestParam Long id){
         String resp = departmentService.deleteDepartmentById(id);
         return new ResponseEntity<>(new ApiResponse<>(resp),HttpStatus.OK);
+    }
+
+    @PatchMapping
+    public ResponseEntity<DepartmentDto> patchDepartment(@RequestParam Long id,@RequestBody Map<String,Object> patches){
+        DepartmentDto departmentDto = departmentService.patchDepartmentById(id,patches);
+        return ResponseEntity.ok(departmentDto);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<DepartmentDto> updateDepartmentById(@PathVariable Long id,@RequestBody DepartmentDto departmentDto){
+        DepartmentDto depDto = departmentService.updateDepartment(id,departmentDto);
+        return ResponseEntity.ok(depDto);
     }
 
 }

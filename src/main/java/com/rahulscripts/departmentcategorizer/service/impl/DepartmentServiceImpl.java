@@ -6,14 +6,18 @@ import com.rahulscripts.departmentcategorizer.entity.DepartmentEntity;
 import com.rahulscripts.departmentcategorizer.repositories.DepartmentRepository;
 import com.rahulscripts.departmentcategorizer.service.DepartmentService;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.el.util.ReflectionUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.Banner;
+import org.springframework.data.util.ReflectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -58,5 +62,27 @@ public class DepartmentServiceImpl implements DepartmentService {
         isExistById(id);
         Optional<DepartmentEntity> ent = departmentRepository.findById(id);
         return modelMapper.map(ent,DepartmentDto.class);
+    }
+
+    @Override
+    public DepartmentDto patchDepartmentById(Long id, Map<String, Object> patches) {
+        isExistById(id);
+        DepartmentEntity departmentEntity = departmentRepository.findById(id).get();
+        patches.forEach((fields,value) -> {
+            Field reqFields = ReflectionUtils.findRequiredField(DepartmentEntity.class,fields);
+            reqFields.setAccessible(true);
+            ReflectionUtils.setField(reqFields,departmentEntity,value);
+        });
+        departmentRepository.save(departmentEntity);
+        return modelMapper.map(departmentEntity,DepartmentDto.class);
+    }
+
+    @Override
+    public DepartmentDto updateDepartment(Long id, DepartmentDto departmentDto) {
+        isExistById(id);
+        departmentDto.setId(id);
+        DepartmentEntity depEntUdated = modelMapper.map(departmentDto,DepartmentEntity.class);
+        departmentRepository.save(depEntUdated);
+        return modelMapper.map(depEntUdated,DepartmentDto.class);
     }
 }

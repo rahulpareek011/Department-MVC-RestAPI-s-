@@ -5,6 +5,7 @@ import com.rahulscripts.departmentcategorizer.dto.DepartmentDto;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DepartmentService {
 
@@ -15,4 +16,8 @@ public interface DepartmentService {
     String deleteDepartmentById(Long id);
 
     DepartmentDto getDepartmentById(Long id);
+
+    DepartmentDto patchDepartmentById(Long id, Map<String, Object> patches);
+
+    DepartmentDto updateDepartment(Long id, DepartmentDto departmentDto);
 }
